@@ -1,0 +1,10 @@
+# Optional Phase-4 extras. Install only if you want the corresponding feature.
+#
+#   pip install -r requirements-optional.txt
+#
+# Wake-word detection:
+openwakeword
+onnxruntime
+#
+# Single-file packaging:
+pyinstaller

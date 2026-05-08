@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voice Flow — Demo</title>
+    <style>
+        :root {
+            --bg: #0b0e14;
+            --surface: #12151d;
+            --card: #181c27;
+            --border: #252a38;
+            --accent: #7fb1ff;
+            --accent2: #5b8def;
+            --green: #4ade80;
+            --yellow: #facc15;
+            --red: #f87171;
+            --text: #e7eaf3;
+            --sub: #8b90a0;
+            --code-bg: #1a1e2a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.65;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ---- NAV ---- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            background: rgba(11, 14, 20, .85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px;
+        }
+
+        nav .logo {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        nav .links {
+            display: flex;
+            gap: 1.6rem;
+        }
+
+        nav .links a {
+            color: var(--sub);
+            font-size: .88rem;
+            transition: color .2s;
+        }
+
+        nav .links a:hover {
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        /* ---- HERO ---- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 1.5rem 4rem;
+            background: radial-gradient(ellipse at 50% 20%, rgba(127, 177, 255, .08) 0%, transparent 60%);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.4rem, 5vw, 3.8rem);
+            font-weight: 800;
+            letter-spacing: -.02em;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero p {
+            max-width: 560px;
+            color: var(--sub);
+            font-size: 1.1rem;
+            margin: 1rem 0 2rem;
+        }
+
+        .hero .badges {
+            display: flex;
+            gap: .6rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 2.4rem;
+        }
+
+        .badge {
+            font-size: .75rem;
+            font-weight: 600;
+            padding: .3rem .7rem;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            color: var(--sub);
+        }
+
+        .badge.g {
+            border-color: rgba(74, 222, 128, .35);
+            color: var(--green);
+        }
+
+        .badge.b {
+            border-color: rgba(127, 177, 255, .35);
+            color: var(--accent);
+        }
+
+        .badge.y {
+            border-color: rgba(250, 204, 21, .3);
+            color: var(--yellow);
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .7rem 1.6rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: .95rem;
+            border: none;
+            cursor: pointer;
+            transition: transform .15s, box-shadow .2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #0b0e14;
+            box-shadow: 0 0 24px rgba(127, 177, 255, .25);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        /* ---- SECTIONS ---- */
+        section {
+            padding: 5rem 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        section h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: .5rem;
+            background: linear-gradient(135deg, var(--text) 40%, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        section .sub {
+            color: var(--sub);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+        }
+
+        /* ---- FEATURE GRID ---- */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .feature-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: border-color .25s, transform .2s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--accent2);
+            transform: translateY(-2px);
+        }
+
+        .feature-card .icon {
+            font-size: 1.6rem;
+            margin-bottom: .6rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: .35rem;
+        }
+
+        .feature-card p {
+            font-size: .88rem;
+            color: var(--sub);
+        }
+
+        /* ---- HOW IT WORKS ---- */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            counter-reset: step;
+        }
+
+        .step {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .step::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            top: -14px;
+            left: 20px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #0b0e14;
+            font-weight: 700;
+            font-size: .85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .step h3 {
+            font-size: 1rem;
+            margin-bottom: .35rem;
+            margin-top: .3rem;
+        }
+
+        .step p {
+            font-size: .85rem;
+            color: var(--sub);
+        }
+
+        /* ---- DEMO AREA ---- */
+        .demo-area {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .demo-toolbar {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .6rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.r {
+            background: var(--red);
+        }
+
+        .dot.y {
+            background: var(--yellow);
+        }
+
+        .dot.g {
+            background: var(--green);
+        }
+
+        .demo-toolbar span {
+            margin-left: .6rem;
+            font-size: .78rem;
+            color: var(--sub);
+        }
+
+        .demo-body {
+            padding: 1.5rem 1.8rem;
+        }
+
+        .demo-transcript {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .demo-row {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .demo-label {
+            flex-shrink: 0;
+            font-size: .7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            padding: .25rem .55rem;
+            border-radius: 6px;
+            min-width: 64px;
+            text-align: center;
+            margin-top: 2px;
+        }
+
+        .demo-label.raw {
+            background: rgba(248, 113, 113, .15);
+            color: var(--red);
+        }
+
+        .demo-label.ref {
+            background: rgba(74, 222, 128, .12);
+            color: var(--green);
+        }
+
+        .demo-text {
+            font-size: .92rem;
+            color: var(--text);
+        }
+
+        .demo-text.faded {
+            color: var(--sub);
+        }
+
+        .waveform-bar {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 48px;
+            margin: 1rem 0;
+        }
+
+        .waveform-bar .bar {
+            width: 4px;
+            border-radius: 2px;
+            background: var(--accent);
+            animation: wave 1.2s ease-in-out infinite alternate;
+        }
+
+        @keyframes wave {
+            0% {
+                opacity: .4;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* ---- MODES TABLE ---- */
+        .modes-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .modes-table th,
+        .modes-table td {
+            text-align: left;
+            padding: .7rem 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: .88rem;
+        }
+
+        .modes-table th {
+            color: var(--sub);
+            font-weight: 600;
+            font-size: .78rem;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .modes-table td:first-child {
+            font-weight: 600;
+        }
+
+        .modes-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ---- PROVIDERS ---- */
+        .provider-cards {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .provider-card {
+            flex: 1 1 200px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+            text-align: center;
+            transition: border-color .2s;
+        }
+
+        .provider-card:hover {
+            border-color: var(--accent);
+        }
+
+        .provider-card .name {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: .25rem;
+        }
+
+        .provider-card .desc {
+            font-size: .8rem;
+            color: var(--sub);
+        }
+
+        /* ---- TASK PROFILES ---- */
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: .8rem;
+        }
+
+        .task-chip {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            transition: border-color .2s, transform .15s;
+        }
+
+        .task-chip:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .task-chip .emoji {
+            font-size: 1.6rem;
+        }
+
+        .task-chip .label {
+            font-size: .85rem;
+            font-weight: 600;
+            margin-top: .4rem;
+        }
+
+        /* ---- ARCHITECTURE ---- */
+        .arch-diagram {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 2rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+        }
+
+        .arch-box {
+            padding: .7rem 1.2rem;
+            border-radius: 8px;
+            font-size: .82rem;
+            font-weight: 600;
+            text-align: center;
+            min-width: 110px;
+        }
+
+        .arch-box.mic {
+            background: rgba(248, 113, 113, .15);
+            color: var(--red);
+            border: 1px solid rgba(248, 113, 113, .3);
+        }
+
+        .arch-box.whisper {
+            background: rgba(250, 204, 21, .12);
+            color: var(--yellow);
+            border: 1px solid rgba(250, 204, 21, .3);
+        }
+
+        .arch-box.llm {
+            background: rgba(127, 177, 255, .12);
+            color: var(--accent);
+            border: 1px solid rgba(127, 177, 255, .3);
+        }
+
+        .arch-box.paste {
+            background: rgba(74, 222, 128, .12);
+            color: var(--green);
+            border: 1px solid rgba(74, 222, 128, .3);
+        }
+
+        .arch-arrow {
+            color: var(--sub);
+            font-size: 1.3rem;
+        }
+
+        /* ---- INSTALL ---- */
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.1rem 1.4rem;
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+            font-size: .85rem;
+            color: var(--sub);
+            overflow-x: auto;
+            margin: .6rem 0;
+            white-space: pre;
+            line-height: 1.7;
+        }
+
+        .code-block .cmd {
+            color: var(--green);
+        }
+
+        .code-block .comment {
+            color: #555a6e;
+        }
+
+        /* ---- FOOTER ---- */
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            border-top: 1px solid var(--border);
+            color: var(--sub);
+            font-size: .82rem;
+        }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 640px) {
+            nav .links {
+                display: none;
+            }
+
+            section {
+                padding: 3rem 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ======== NAV ======== -->
+    <nav>
+        <div class="logo">&#x1f399;&#xfe0f; Voice Flow</div>
+        <div class="links">
+            <a href="#features">Features</a>
+            <a href="#how">How It Works</a>
+            <a href="#demo">Demo</a>
+            <a href="#modes">Modes</a>
+            <a href="#providers">Providers</a>
+            <a href="#install">Install</a>
+        </div>
+    </nav>
+
+    <!-- ======== HERO ======== -->
+    <section class="hero">
+        <div class="badges">
+            <span class="badge g">100% Offline STT</span>
+            <span class="badge b">5 LLM Providers</span>
+            <span class="badge y">6 Task Profiles</span>
+            <span class="badge">Windows &amp; macOS</span>
+        </div>
+        <h1>Speak. <span>Refine.</span> Paste.</h1>
+        <p>Voice Flow turns your voice into polished text — transcribed locally with Whisper, refined by your choice of
+            LLM, and pasted instantly wherever your cursor is.</p>
+        <div class="cta-group">
+            <a href="#install" class="btn btn-primary">Get Started</a>
+            <a href="#demo" class="btn btn-outline">See Demo &#8595;</a>
+        </div>
+    </section>
+
+    <!-- ======== HOW IT WORKS ======== -->
+    <section id="how">
+        <h2>How It Works</h2>
+        <p class="sub">Four steps from voice to text, in under two seconds.</p>
+
+        <div class="arch-diagram" style="margin-bottom: 2rem;">
+            <div class="arch-box mic">&#x1f3a4; Microphone</div>
+            <span class="arch-arrow">&#x2192;</span>
+            <div class="arch-box whisper">&#x1f9e0; Whisper STT</div>
+            <span class="arch-arrow">&#x2192;</span>
+            <div class="arch-box llm">&#x2728; LLM Refine</div>
+            <span class="arch-arrow">&#x2192;</span>
+            <div class="arch-box paste">&#x1f4cb; Auto-Paste</div>
+        </div>
+
+        <div class="steps">
+            <div class="step">
+                <h3>Hold the Hotkey</h3>
+                <p>Press and hold <strong>Ctrl+Shift+Space</strong> (configurable) to start recording. A waveform
+                    appears so you can see your audio level.</p>
+            </div>
+            <div class="step">
+                <h3>Speak Naturally</h3>
+                <p>Talk at your normal pace. Voice Flow captures 16 kHz audio and monitors silence for auto-stop in
+                    wake-word mode.</p>
+            </div>
+            <div class="step">
+                <h3>AI Refines</h3>
+                <p>The raw transcript passes through your chosen LLM — Ollama, Groq, OpenAI, or any compatible API — to
+                    fix grammar, rephrase for email, or format as bullet points.</p>
+            </div>
+            <div class="step">
+                <h3>Text Appears</h3>
+                <p>The polished text is copied to your clipboard and pasted automatically (Ctrl+V / Cmd+V) right where
+                    your cursor sits. Done.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== FEATURES ======== -->
+    <section id="features">
+        <h2>Features</h2>
+        <p class="sub">Everything you need for voice-driven productivity — no cloud account required for transcription.
+        </p>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="icon">&#x1f3a4;</div>
+                <h3>Push-to-Talk &amp; Wake Word</h3>
+                <p>Hold a hotkey to record, or say "Hey Jarvis" for hands-free activation with automatic silence
+                    detection.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">&#x1f9e0;</div>
+                <h3>Local Whisper STT</h3>
+                <p>Transcription runs entirely on your machine via OpenAI Whisper. Supports tiny → large models and 14+
+                    languages.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">&#x2728;</div>
+                <h3>LLM Refinement</h3>
+                <p>Send raw transcripts through Ollama, Groq, OpenAI, LM Studio, or any compatible endpoint for grammar
+                    fixes, rephrasing, or formatting.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">&#x1f3af;</div>
+                <h3>Task Profiles</h3>
+                <p>Choose your task on startup — Prompting, Coding, Email, Notes, Meeting, or General — and the app
+                    auto-configures its behavior.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">&#x1f4cb;</div>
+                <h3>Smart Paste</h3>
+                <p>Auto-pastes where your cursor is. Typing mode for apps that block Ctrl+V. Re-paste with Ctrl+Shift+R.
+                    Clipboard templates via <code>{clipboard}</code>.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">&#x1f4ca;</div>
+                <h3>Live Waveform</h3>
+                <p>Real-time audio level visualization while recording so you know the mic is picking you up.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">&#x1f4c2;</div>
+                <h3>History &amp; Favorites</h3>
+                <p>Full-text search, date range filters, favorites, export to .txt/.md — all in a built-in history
+                    viewer.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">&#x1f50a;</div>
+                <h3>Sound Feedback</h3>
+                <p>Audible beeps on record start, stop, cancel, and paste so you always know the state — even without
+                    looking.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">&#x2699;&#xfe0f;</div>
+                <h3>System Tray Control</h3>
+                <p>Toggle every setting from the tray menu — LLM, wake-word, mode, task, language, typing mode,
+                    waveform, and more.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">&#x1f504;</div>
+                <h3>Context-Aware Refine</h3>
+                <p>Sends the previous transcript as context so follow-up dictations produce coherent, connected text.
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">&#x1f4dd;</div>
+                <h3>Editable Prompts</h3>
+                <p>Edit mode prompts directly in Settings — no JSON files needed. Each mode's system prompt is fully
+                    customizable.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">&#x1f680;</div>
+                <h3>Launch on Startup</h3>
+                <p>One-click toggle registers Voice Flow in Windows startup (HKCU\Run). Cross-platform paste on macOS.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== DEMO ======== -->
+    <section id="demo">
+        <h2>Live Demo</h2>
+        <p class="sub">See what happens when you dictate a voice note in different modes.</p>
+
+        <div class="demo-area">
+            <div class="demo-toolbar">
+                <div class="dot r"></div>
+                <div class="dot y"></div>
+                <div class="dot g"></div>
+                <span>Voice Flow — Recording...</span>
+            </div>
+            <div class="demo-body">
+                <div class="waveform-bar" id="waveform"></div>
+                <div class="demo-transcript">
+                    <div class="demo-row">
+                        <span class="demo-label raw">Raw</span>
+                        <span class="demo-text faded">"so basically um the new API endpoint needs to handle uh
+                            authentication using JWT tokens and also rate limiting should be added"</span>
+                    </div>
+                </div>
+                <hr style="border: none; border-top: 1px solid var(--border); margin: 1.2rem 0;">
+                <p style="font-size: .78rem; color: var(--sub); margin-bottom: .8rem;">&#x2193; After LLM refinement
+                    (Default mode)</p>
+                <div class="demo-transcript">
+                    <div class="demo-row">
+                        <span class="demo-label ref">Refined</span>
+                        <span class="demo-text">"The new API endpoint needs to handle authentication using JWT tokens.
+                            Rate limiting should also be added."</span>
+                    </div>
+                </div>
+                <hr style="border: none; border-top: 1px solid var(--border); margin: 1.2rem 0;">
+                <p style="font-size: .78rem; color: var(--sub); margin-bottom: .8rem;">&#x2193; Same input in
+                    <strong>Bullets</strong> mode</p>
+                <div class="demo-transcript">
+                    <div class="demo-row">
+                        <span class="demo-label ref">Refined</span>
+                        <span class="demo-text">
+                            &bull; New API endpoint required<br>
+                            &bull; Handle authentication using JWT tokens<br>
+                            &bull; Add rate limiting
+                        </span>
+                    </div>
+                </div>
+                <hr style="border: none; border-top: 1px solid var(--border); margin: 1.2rem 0;">
+                <p style="font-size: .78rem; color: var(--sub); margin-bottom: .8rem;">&#x2193; Same input in
+                    <strong>Email</strong> mode</p>
+                <div class="demo-transcript">
+                    <div class="demo-row">
+                        <span class="demo-label ref">Refined</span>
+                        <span class="demo-text">
+                            Hi,<br><br>
+                            I wanted to share the requirements for the new API endpoint. It needs to handle
+                            authentication using JWT tokens, and we should also add rate limiting.<br><br>
+                            Best regards
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== MODES ======== -->
+    <section id="modes">
+        <h2>Refinement Modes</h2>
+        <p class="sub">Switch modes from the tray menu or Settings. Each mode sends a different system prompt to the
+            LLM.</p>
+
+        <div class="demo-area" style="overflow-x: auto;">
+            <table class="modes-table">
+                <thead>
+                    <tr>
+                        <th>Mode</th>
+                        <th>What it does</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Default</td>
+                        <td>Fix grammar and clean up the transcript. Return only the cleaned text.</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>Rewrite as a professional email body with greeting and sign-off.</td>
+                    </tr>
+                    <tr>
+                        <td>Code Comment</td>
+                        <td>Rewrite as a concise, technical code comment.</td>
+                    </tr>
+                    <tr>
+                        <td>Bullets</td>
+                        <td>Convert into a tight bulleted list — one idea per bullet.</td>
+                    </tr>
+                    <tr>
+                        <td>Meeting Notes</td>
+                        <td>Summarize into Decisions and Action Items sections.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 style="margin-top: 2.5rem; font-size: 1.1rem;">Task Profiles</h3>
+        <p class="sub">Choose on startup. Each profile pre-configures the mode, LLM toggle, and system prompt.</p>
+        <div class="task-grid">
+            <div class="task-chip">
+                <div class="emoji">&#x1f4ac;</div>
+                <div class="label">Prompting</div>
+            </div>
+            <div class="task-chip">
+                <div class="emoji">&#x1f4bb;</div>
+                <div class="label">Coding</div>
+            </div>
+            <div class="task-chip">
+                <div class="emoji">&#x2709;&#xfe0f;</div>
+                <div class="label">Email</div>
+            </div>
+            <div class="task-chip">
+                <div class="emoji">&#x1f4dd;</div>
+                <div class="label">Notes</div>
+            </div>
+            <div class="task-chip">
+                <div class="emoji">&#x1f465;</div>
+                <div class="label">Meeting</div>
+            </div>
+            <div class="task-chip">
+                <div class="emoji">&#x1f310;</div>
+                <div class="label">General</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== PROVIDERS ======== -->
+    <section id="providers">
+        <h2>LLM Providers</h2>
+        <p class="sub">Use any model you want — local or cloud. Switch providers in Settings.</p>
+        <div class="provider-cards">
+            <div class="provider-card">
+                <div class="name">Ollama</div>
+                <div class="desc">Run Llama 3, Mistral, Gemma locally. Zero API cost.</div>
+            </div>
+            <div class="provider-card">
+                <div class="name">Groq</div>
+                <div class="desc">Ultra-fast cloud inference. Free tier available.</div>
+            </div>
+            <div class="provider-card">
+                <div class="name">OpenAI</div>
+                <div class="desc">GPT-4o, GPT-4o-mini — the classic choice.</div>
+            </div>
+            <div class="provider-card">
+                <div class="name">LM Studio</div>
+                <div class="desc">Local GUI for GGUF models. OpenAI-compatible API.</div>
+            </div>
+            <div class="provider-card">
+                <div class="name">Any Compatible</div>
+                <div class="desc">text-generation-webui, vLLM, Together AI — anything with an OpenAI-style endpoint.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== INSTALL ======== -->
+    <section id="install">
+        <h2>Quick Start</h2>
+        <p class="sub">Get running in under a minute.</p>
+
+        <div class="code-block"><span class="comment"># Clone the repo</span>
+            <span class="cmd">git clone https://github.com/your-username/voiceflow.git</span>
+            <span class="cmd">cd voiceflow</span>
+
+            <span class="comment"># Install dependencies</span>
+            <span class="cmd">pip install -r requirements.txt</span>
+
+            <span class="comment"># Run</span>
+            <span class="cmd">python main.py</span>
+        </div>
+
+        <p style="color: var(--sub); font-size: .88rem; margin-top: 1rem;">
+            <strong>Requirements:</strong> Python 3.10+, a microphone, ~1 GB disk for Whisper base model.<br>
+            <strong>Optional:</strong> Ollama running locally for LLM refinement, or a Groq / OpenAI API key.
+        </p>
+
+        <h3 style="margin-top: 2rem; font-size: 1rem;">Keyboard Shortcuts</h3>
+        <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: .6rem; margin-top: .8rem;">
+            <div class="feature-card" style="padding: 1rem;">
+                <code style="color: var(--accent);">Ctrl+Shift+Space</code>
+                <span style="color: var(--sub); font-size: .85rem; margin-left: .5rem;">Hold to record</span>
+            </div>
+            <div class="feature-card" style="padding: 1rem;">
+                <code style="color: var(--accent);">Escape</code>
+                <span style="color: var(--sub); font-size: .85rem; margin-left: .5rem;">Cancel recording</span>
+            </div>
+            <div class="feature-card" style="padding: 1rem;">
+                <code style="color: var(--accent);">Ctrl+Shift+R</code>
+                <span style="color: var(--sub); font-size: .85rem; margin-left: .5rem;">Re-paste last result</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== STATS ======== -->
+    <section>
+        <h2>Built With</h2>
+        <p class="sub">Lightweight stack, no Electron, no browser — just Python and native OS APIs.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: .5rem;">
+            <span class="badge">Python 3.11</span>
+            <span class="badge">OpenAI Whisper</span>
+            <span class="badge">Tkinter</span>
+            <span class="badge">pystray</span>
+            <span class="badge">pynput</span>
+            <span class="badge">sounddevice</span>
+            <span class="badge">pyautogui</span>
+            <span class="badge">pyperclip</span>
+            <span class="badge">NumPy</span>
+            <span class="badge">Pillow</span>
+            <span class="badge">requests</span>
+        </div>
+    </section>
+
+    <!-- ======== FOOTER ======== -->
+    <footer>
+        <p>&#x1f399;&#xfe0f; Voice Flow &mdash; Speak naturally, paste perfectly.</p>
+        <p style="margin-top: .4rem;">Built with &#10084;&#65039; &middot; Open Source &middot; No telemetry</p>
+    </footer>
+
+    <!-- ======== WAVEFORM ANIMATION ======== -->
+    <script>
+        const container = document.getElementById('waveform');
+        const barCount = 60;
+        for (let i = 0; i < barCount; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'bar';
+            const h = Math.random() * 36 + 8;
+            bar.style.height = h + 'px';
+            bar.style.animationDelay = (Math.random() * 1.2).toFixed(2) + 's';
+            bar.style.animationDuration = (0.6 + Math.random() * 0.8).toFixed(2) + 's';
+            container.appendChild(bar);
+        }
+    </script>
+
+</body>
+
+</html>
