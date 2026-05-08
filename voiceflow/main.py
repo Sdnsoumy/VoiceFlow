@@ -317,9 +317,26 @@ def main() -> None:
     repaste_chord = config.get("repaste_hotkey", "ctrl+shift+r")
     print("[main] hold the hotkey to dictate; press Escape to cancel; tray menu has Settings / History / Mode / Language / toggles / Quit")
     
-    # Run hotkey.run() directly on the main thread; it no longer blocks
-    hotkey.run(config["hotkey"], on_press_chord, on_release_chord, on_cancel, "esc", {repaste_chord: on_repaste})
+    # Start hotkey listener on a background thread to avoid blocking the main thread
+    # (which must run the Tk mainloop on macOS).
+    def _start_hotkey_listener():
+        try:
+            hotkey.run(config["hotkey"], on_press_chord, on_release_chord, on_cancel, "esc", {repaste_chord: on_repaste})
+        except PermissionError as e:
+            if "not trusted" in str(e) or "accessibility" in str(e).lower():
+                print("[main] ERROR: VoiceFlow needs Accessibility permissions to listen for the global hotkey.")
+                print("[main] On macOS, go to System Preferences > Security & Privacy > Accessibility")
+                print("[main] and add Terminal (or Python) to the list of allowed apps.")
+            else:
+                print(f"[main] hotkey permission error: {e}")
+        except Exception as exc:  # noqa: BLE001
+            print(f"[main] hotkey listener failed: {exc}")
+            traceback.print_exc()
+    
+    listener_thread = threading.Thread(target=_start_hotkey_listener, daemon=True)
+    listener_thread.start()
 
+    # Tk mainloop must run on the main thread on macOS
     get_ui()._root.mainloop()
 
 
