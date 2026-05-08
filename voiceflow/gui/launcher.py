@@ -195,8 +195,13 @@ def show_launcher(on_chosen: Callable[[str, bool], None]) -> None:
         root.mainloop()
         closed.set()
 
-    # Run the launcher on the current thread (avoids macOS crash)
-    _build()
+    # Run the launcher on the main thread (required on macOS for Tk).
+    # Note: this blocks until the user makes a choice.
+    try:
+        _build()
+    except Exception as e:
+        print(f"[launcher] failed to show: {e}; using default")
+        result.append("general")
 
     chosen_id = result[0] if result else "general"
     skip = "skip_launcher" in result
