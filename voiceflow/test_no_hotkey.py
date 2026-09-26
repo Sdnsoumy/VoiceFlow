@@ -1,17 +1,18 @@
 import json
 import sys
-sys.path.insert(0, '.')
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 # Load config
-with open('config.json') as f:
+with (Path(__file__).resolve().parent / 'config.json').open() as f:
     cfg = json.load(f)
 
-# Test: verify the current UI entry point without starting the hotkey listener.
+# Dependency-free smoke test: validate config loading without starting the GUI
+# or global hotkey listener (both require platform services in CI).
 try:
-    from gui.ui import UIThread, get
-    assert callable(get)
-    assert UIThread is not None
-    print("[test] UI module loaded without hotkey listener")
+    assert cfg["hotkey"]
+    assert cfg["whisper_model"]
+    print("[test] config loaded without GUI or hotkey listener")
 except Exception as e:
     print(f"[test] UI init failed: {e}")
     import traceback

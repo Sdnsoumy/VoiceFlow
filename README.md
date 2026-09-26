@@ -1,5 +1,8 @@
 # VoiceFlow
 
+[![CI](https://github.com/Sdnsoumy/VoiceFlow/actions/workflows/ci.yml/badge.svg)](https://github.com/Sdnsoumy/VoiceFlow/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+
 VoiceFlow is a desktop voice dictation tool that records speech, transcribes it locally with Whisper, optionally refines the text with a local or cloud LLM, and pastes the result into the active application. It is built for fast dictation workflows with a tray-based UI, configurable hotkeys, optional wake-word activation, and transcript history.
 
 ## What it does
@@ -67,3 +70,7 @@ Most behavior is controlled through `voiceflow/config.json`. Common settings inc
 ## More Documentation
 
 The full setup guide, feature list, troubleshooting notes, and packaging instructions live in [voiceflow/README.md](voiceflow/README.md).
+
+## License
+
+VoiceFlow is licensed under the [Apache License 2.0](LICENSE).

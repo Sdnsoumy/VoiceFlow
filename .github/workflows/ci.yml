@@ -25,3 +25,6 @@ jobs:
         working-directory: voiceflow
         run: |
           python -c "from config import load_config; cfg = load_config(); assert cfg['hotkey']; print('config ok')"
+
+      - name: Run dependency-free smoke test
+        run: python voiceflow/test_no_hotkey.py
