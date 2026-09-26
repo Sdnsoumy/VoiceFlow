@@ -1,0 +1,52 @@
+name: Deploy prod-path1
+
+on:
+  push:
+    branches:
+      - prod-path1
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-prod-path1
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    name: Deploy to prod-path1
+    runs-on: ubuntu-latest
+    environment:
+      name: prod-path1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Syntax-check voiceflow
+        run: python -m compileall -q voiceflow
+
+      - name: Package app
+        run: |
+          mkdir -p dist
+          tar -czf dist/voiceflow-prod-path1.tar.gz voiceflow
+
+      - name: Upload prod-path1 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: voiceflow-prod-path1
+          path: dist/voiceflow-prod-path1.tar.gz
+          if-no-files-found: error
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: prod-path1-${{ github.run_number }}
+          name: prod-path1 ${{ github.run_number }}
+          files: dist/voiceflow-prod-path1.tar.gz
+          generate_release_notes: true
