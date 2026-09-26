@@ -13,8 +13,8 @@
   "openai_api_key": "",
   "openai_base_url": "https://api.openai.com/v1",
   "active_mode": "Default",
-  "active_task": "prompting",
-  "skip_launcher": true,
+  "active_task": "general",
+  "skip_launcher": false,
   "modes": [
     {
       "name": "Default",
@@ -49,5 +49,5 @@
   "launch_on_startup": false,
   "show_notification": true,
   "save_history": true,
-  "show_waveform": false
+  "show_waveform": true
 }

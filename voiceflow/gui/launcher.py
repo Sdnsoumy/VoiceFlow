@@ -15,6 +15,8 @@ import threading
 import tkinter as tk
 from tkinter import ttk
 from typing import Callable
+import importlib.util
+import shutil
 
 from modes import TASK_PROFILES, get_task_profile
 
@@ -59,6 +61,26 @@ def show_launcher(on_chosen: Callable[[str, bool], None]) -> None:
             hdr, text="What are you working on?", bg=BG, fg=SUB_TEXT,
             font=("Segoe UI", 10),
         ).pack(anchor="w", pady=(2, 0))
+
+        # Quick setup status so users can diagnose a launch before starting.
+        status_var = tk.StringVar(value="Checking microphone and Python dependencies…")
+        status_label = tk.Label(
+            hdr, textvariable=status_var, bg=BG, fg=SUB_TEXT,
+            font=("Segoe UI", 9), anchor="w",
+        )
+        status_label.pack(anchor="w", pady=(10, 0))
+
+        def check_setup() -> None:
+            required = ("pynput", "sounddevice", "whisper", "pystray", "PIL")
+            missing = [name for name in required if importlib.util.find_spec(name) is None]
+            if shutil.which("ffmpeg") is None:
+                missing.append("ffmpeg")
+            if missing:
+                status_var.set("Missing: " + ", ".join(missing) + " — install requirements.txt")
+                status_label.configure(fg="#ff9b9b")
+            else:
+                status_var.set("✓ Ready — click Start Voice Flow")
+                status_label.configure(fg="#9be7b0")
 
         # Scrollable card area
         container = tk.Frame(root, bg=BG)
@@ -173,11 +195,20 @@ def show_launcher(on_chosen: Callable[[str, bool], None]) -> None:
             root.destroy()
 
         start_btn = tk.Button(
-            bottom, text="Start  \u2192", bg=ACCENT, fg="#0f1117",
+            bottom, text="Start Voice Flow  \u2192", bg=ACCENT, fg="#0f1117",
             font=("Segoe UI", 10, "bold"), relief="flat", padx=18, pady=4,
             activebackground="#5a9aee", cursor="hand2", command=do_start,
         )
         start_btn.pack(side="right")
+
+        tk.Button(
+            bottom, text="Check setup", bg=CARD_BG, fg=TEXT,
+            font=("Segoe UI", 9), relief="flat", padx=10, pady=4,
+            activebackground=CARD_HOVER, activeforeground=TEXT,
+            command=check_setup,
+        ).pack(side="right", padx=(0, 8))
+
+        root.after(100, check_setup)
 
         # Double-click a card = instant start
         def on_double(task_id: str) -> None:
@@ -206,7 +237,6 @@ def show_launcher(on_chosen: Callable[[str, bool], None]) -> None:
     chosen_id = result[0] if result else "general"
     skip = "skip_launcher" in result
     on_chosen(chosen_id, skip)
-
 
 
 

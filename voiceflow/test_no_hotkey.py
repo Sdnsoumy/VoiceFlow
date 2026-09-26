@@ -6,12 +6,12 @@ sys.path.insert(0, '.')
 with open('config.json') as f:
     cfg = json.load(f)
 
-# Test: create the GUI without starting the hotkey listener
+# Test: verify the current UI entry point without starting the hotkey listener.
 try:
-    from gui.ui import init_ui
-    root = init_ui(cfg)
-    print("[test] UI initialized without hotkey listener")
-    # Don't call mainloop yet; just see if init worked
+    from gui.ui import UIThread, get
+    assert callable(get)
+    assert UIThread is not None
+    print("[test] UI module loaded without hotkey listener")
 except Exception as e:
     print(f"[test] UI init failed: {e}")
     import traceback

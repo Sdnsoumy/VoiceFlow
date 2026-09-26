@@ -17,6 +17,7 @@ thread so the hotkey listener stays responsive.
 from __future__ import annotations
 
 import os
+import shutil
 import sys
 import threading
 import traceback
@@ -63,6 +64,14 @@ def _apply_task_profile(config: dict, task_id: str) -> dict:
 def main() -> None:
     """Boot sequence: load config → show launcher → init subsystems → run hotkey loop."""
     config = load_config()
+
+    # Fail early with an actionable message instead of waiting for Whisper to
+    # fail later while decoding the first recording.
+    if shutil.which("ffmpeg") is None:
+        print("[main] ERROR: ffmpeg was not found on PATH.")
+        print("[main] Install it with: brew install ffmpeg")
+        print("[main] Then restart VoiceFlow.")
+        return
 
     # --- Task launcher (skip if config says so) ---
     if not config.get("skip_launcher"):
