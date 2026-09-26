@@ -10,9 +10,13 @@ concurrency:
   group: deploy-dev-path1
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     name: Deploy to dev-path1
+    if: github.ref_name == 'dev-path1'
     runs-on: ubuntu-latest
     environment:
       name: dev-path1
@@ -31,7 +35,7 @@ jobs:
       - name: Package app
         run: |
           mkdir -p dist
-          tar -czf dist/voiceflow-dev-path1.tar.gz voiceflow
+          tar --exclude='__pycache__' --exclude='*.pyc' -czf dist/voiceflow-dev-path1.tar.gz voiceflow
 
       - name: Upload dev-path1 artifact
         uses: actions/upload-artifact@v4
