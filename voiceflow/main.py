@@ -68,9 +68,11 @@ def main() -> None:
     # Fail early with an actionable message instead of waiting for Whisper to
     # fail later while decoding the first recording.
     if shutil.which("ffmpeg") is None:
-        print("[main] ERROR: ffmpeg was not found on PATH.")
-        print("[main] Install it with: brew install ffmpeg")
-        print("[main] Then restart VoiceFlow.")
+        print("[main] ERROR: Whisper requires ffmpeg, but it was not found on PATH.")
+        print("[main] Install ffmpeg using one of these commands:")
+        print("[main]   Windows: winget install Gyan.FFmpeg")
+        print("[main]   macOS: brew install ffmpeg")
+        print("[main] Then restart VoiceFlow after your PATH is refreshed.")
         return
 
     # --- Task launcher (skip if config says so) ---
