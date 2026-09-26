@@ -11,14 +11,17 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   deploy:
     name: Deploy to prod-path1
+    if: github.ref_name == 'prod-path1'
     runs-on: ubuntu-latest
     environment:
       name: prod-path1
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,7 +37,7 @@ jobs:
       - name: Package app
         run: |
           mkdir -p dist
-          tar -czf dist/voiceflow-prod-path1.tar.gz voiceflow
+          tar --exclude='__pycache__' --exclude='*.pyc' -czf dist/voiceflow-prod-path1.tar.gz voiceflow
 
       - name: Upload prod-path1 artifact
         uses: actions/upload-artifact@v4
@@ -44,7 +47,7 @@ jobs:
           if-no-files-found: error
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
         with:
           tag_name: prod-path1-${{ github.run_number }}
           name: prod-path1 ${{ github.run_number }}
